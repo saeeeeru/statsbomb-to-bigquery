@@ -1,0 +1,19 @@
+# Snowflake Connection
+snowflake_account  = "your_account.region"
+snowflake_user     = "your_terraform_user"
+snowflake_password = "your_password"
+snowflake_role     = "SYSADMIN"
+
+# Project Settings
+project_prefix      = "STATSBOMB"
+database_name       = "RAW"
+schema_name         = "STATSBOMB"
+data_retention_days = 7
+
+# Warehouse Settings
+warehouse_name              = "STATSBOMB_WH"
+warehouse_size              = "Small"
+warehouse_auto_suspend      = 300
+warehouse_min_cluster_count = 1
+warehouse_max_cluster_count = 2
+warehouse_scaling_policy    = "STANDARD"

@@ -55,7 +55,25 @@ SNOWFLAKE_SCHEMA=STATSBOMB
 SNOWFLAKE_ROLE=your_role  # オプション
 ```
 
-### 3. テーブルの作成
+### 3. インフラのセットアップ（Terraform）
+
+Snowflakeのインフラ（Database、Schema、Warehouse、Role、テーブル）はTerraformで管理します。
+
+```bash
+cd terraform/environments/dev
+cp terraform.tfvars.example terraform.tfvars
+# terraform.tfvars を編集
+
+terraform init
+terraform plan
+terraform apply
+```
+
+詳細は [terraform/README.md](terraform/README.md) を参照してください。
+
+### 4. テーブルの作成（CLI経由の場合）
+
+Terraformを使用しない場合は、CLIからテーブルを作成できます：
 
 ```bash
 # Landing層のテーブルを作成
@@ -113,19 +131,23 @@ statsbomb-load load-matches 11 90 --include-details
 ├── .env.example            # 環境変数のテンプレート
 ├── README.md
 ├── ddl/
-│   └── landing/            # Landing層のDDL定義
-│       ├── 01_competitions.sql
-│       ├── 02_matches.sql
-│       ├── 03_events.sql
-│       ├── 04_lineups.sql
-│       └── 05_three_sixty.sql
-└── src/
-    └── statsbomb_snowflake/
-        ├── __init__.py
-        ├── cli.py          # CLIエントリポイント
-        ├── config.py       # 設定管理
-        ├── fetcher.py      # StatsBombデータ取得
-        └── loader.py       # Snowflakeロード
+│   └── landing/            # Landing層のDDL定義（CLI用）
+├── src/
+│   └── statsbomb_snowflake/
+│       ├── __init__.py
+│       ├── cli.py          # CLIエントリポイント
+│       ├── config.py       # 設定管理
+│       ├── fetcher.py      # StatsBombデータ取得
+│       └── loader.py       # Snowflakeロード
+└── terraform/              # Snowflakeインフラ管理
+    ├── modules/            # 再利用可能モジュール
+    │   ├── database/
+    │   ├── warehouse/
+    │   ├── roles/
+    │   └── landing_tables/
+    └── environments/       # 環境別設定
+        ├── dev/
+        └── prod/
 ```
 
 ## データ活用例
